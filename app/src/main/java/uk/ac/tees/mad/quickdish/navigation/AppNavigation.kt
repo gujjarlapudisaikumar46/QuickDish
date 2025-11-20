@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import uk.ac.tees.mad.quickdish.ui.screens.HomeScreen
 import uk.ac.tees.mad.quickdish.ui.screens.SplashScreen
 
 sealed class Screen(val route: String) {
@@ -38,7 +39,9 @@ fun AppNavigation(modifier: Modifier = Modifier) {
 
         composable(Screen.Home.route) {
             // TODO: Implement HomeScreen
-            // HomeScreen(navController = navController)
+            HomeScreen {
+
+            }
         }
 
         composable(Screen.RecipeResults.route) {
