@@ -71,8 +71,10 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
 // Coroutines
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     // Retrofit and Json Convertion
     //    network calls
-    implementation( "com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("androidx.compose.material:material-icons-extended:1.6.7")
+
 }

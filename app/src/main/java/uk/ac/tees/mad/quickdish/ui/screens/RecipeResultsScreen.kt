@@ -1,0 +1,267 @@
+package uk.ac.tees.mad.quickdish.ui.screens
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import uk.ac.tees.mad.quickdish.model.Recipe
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RecipeResultsScreen(
+    recipes: List<Recipe> = emptyList(),
+    ingredientsUsed: String = "",
+    onRecipeClick: (Recipe) -> Unit = {},
+    onBackClick: () -> Unit = {},
+    onRefreshClick: () -> Unit = {}
+) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Recipe Results",
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onRefreshClick) {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = "Refresh"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF4CAF50),
+                    titleContentColor = Color.White,
+                    navigationIconContentColor = Color.White,
+                    actionIconContentColor = Color.White
+                )
+            )
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFFAFAFA))
+                .padding(paddingValues)
+        ) {
+            // Ingredients Used Header
+            if (ingredientsUsed.isNotEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White)
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        text = "Based on your ingredients:",
+                        fontSize = 12.sp,
+                        color = Color(0xFF757575)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = ingredientsUsed,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color(0xFF2E7D32)
+                    )
+                }
+            }
+
+            // Recipe Results Count
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "${recipes.size} ${if (recipes.size == 1) "recipe" else "recipes"} found",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xFF212121)
+                )
+            }
+
+            // Recipe List
+            if (recipes.isEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(32.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "😔",
+                        fontSize = 48.sp
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "No recipes found",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFF212121)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Try different ingredients or refresh",
+                        fontSize = 14.sp,
+                        color = Color(0xFF757575)
+                    )
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp)
+                ) {
+                    items(recipes) { recipe ->
+                        RecipeCard(
+                            recipe = recipe,
+                            onClick = { onRecipeClick(recipe) }
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
+                    item {
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun RecipeCard(
+    recipe: Recipe,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 2.dp
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = recipe.title,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF212121),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = recipe.description,
+                    fontSize = 14.sp,
+                    color = Color(0xFF757575),
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Text(
+                        text = "🥗 ${recipe.ingredients.size} ingredients",
+                        fontSize = 12.sp,
+                        color = Color(0xFF4CAF50)
+                    )
+                    Text(
+                        text = "📝 ${recipe.steps.size} steps",
+                        fontSize = 12.sp,
+                        color = Color(0xFFFF9800)
+                    )
+                }
+            }
+
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowRight,
+                contentDescription = "View recipe",
+                tint = Color(0xFF4CAF50)
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun RecipeResultsScreenPreview() {
+    val sampleRecipes = listOf(
+        Recipe(
+            id = "1",
+            title = "Garlic Butter Chicken",
+            description = "A delicious and easy chicken dish with garlic butter sauce, perfect for weeknight dinners.",
+            ingredients = listOf("chicken", "garlic", "butter", "olive oil"),
+            steps = listOf("Step 1", "Step 2", "Step 3")
+        ),
+        Recipe(
+            id = "2",
+            title = "Chicken Tomato Rice",
+            description = "One-pot chicken and rice with fresh tomatoes and herbs. Simple and flavorful.",
+            ingredients = listOf("chicken", "rice", "tomatoes", "onion", "garlic"),
+            steps = listOf("Step 1", "Step 2", "Step 3", "Step 4")
+        ),
+        Recipe(
+            id = "3",
+            title = "Mediterranean Chicken Bowl",
+            description = "Healthy chicken bowl with Mediterranean flavors, olives, and fresh vegetables.",
+            ingredients = listOf("chicken", "olives", "tomatoes", "cucumber", "feta"),
+            steps = listOf("Step 1", "Step 2")
+        )
+    )
+
+    RecipeResultsScreen(
+        recipes = sampleRecipes,
+        ingredientsUsed = "chicken, garlic, olive oil, tomatoes"
+    )
+}
+

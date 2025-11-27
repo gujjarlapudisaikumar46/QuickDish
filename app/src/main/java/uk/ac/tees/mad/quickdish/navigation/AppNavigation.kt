@@ -38,22 +38,22 @@ fun AppNavigation(modifier: Modifier = Modifier) {
         }
 
         composable(Screen.Home.route) {
-            // TODO: Implement HomeScreen
+            // Implement HomeScreen
             HomeScreen {
 
             }
         }
 
         composable(Screen.RecipeResults.route) {
-            // TODO: Implement RecipeResultsScreen
+            // Implement RecipeResultsScreen
         }
 
         composable(Screen.RecipeDetails.route) {
-            // TODO: Implement RecipeDetailsScreen
+            // Implement RecipeDetailsScreen
         }
 
         composable(Screen.Settings.route) {
-            // TODO: Implement SettingsScreen
+            // Implement SettingsScreen
         }
     }
 }
