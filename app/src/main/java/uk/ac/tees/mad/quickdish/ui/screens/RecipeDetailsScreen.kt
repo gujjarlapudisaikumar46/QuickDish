@@ -312,3 +312,30 @@ private fun copyRecipeToClipboard(context: Context, recipe: Recipe) {
     Toast.makeText(context, "Recipe copied to clipboard!", Toast.LENGTH_SHORT).show()
 }
 
+@Preview(showBackground = true)
+@Composable
+fun RecipeDetailsScreenPreview() {
+    val sampleRecipe = Recipe(
+        id = "1",
+        title = "Garlic Butter Chicken",
+        description = "A delicious and easy chicken dish with garlic butter sauce, perfect for weeknight dinners.",
+        ingredients = listOf(
+            "500g chicken breast, cut into pieces",
+            "4 cloves garlic, minced",
+            "3 tbsp butter",
+            "2 tbsp olive oil",
+            "Salt and pepper to taste",
+            "Fresh parsley for garnish"
+        ),
+        steps = listOf(
+            "Season chicken pieces with salt and pepper.",
+            "Heat olive oil in a large skillet over medium-high heat.",
+            "Add chicken and cook for 5-7 minutes until golden brown.",
+            "Add butter and minced garlic, cook for 2 minutes until fragrant.",
+            "Reduce heat and cook for another 3-4 minutes until chicken is cooked through.",
+            "Garnish with fresh parsley and serve hot."
+        )
+    )
+
+    RecipeDetailsScreen(recipe = sampleRecipe)
+}
