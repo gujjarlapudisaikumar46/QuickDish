@@ -59,6 +59,7 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
     // dep
     implementation("androidx.room:room-runtime:2.7.0-alpha05")
@@ -67,9 +68,9 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.7.0")
     implementation("com.google.dagger:hilt-android:2.57.1")
     kapt("com.google.dagger:hilt-compiler:2.57.1")
-
+    implementation("com.google.code.gson:gson:2.13.2")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
-
+    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
 // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     // Retrofit and Json Convertion

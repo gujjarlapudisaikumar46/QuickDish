@@ -1,5 +1,6 @@
 package uk.ac.tees.mad.quickdish.ui.screens
 
+import android.R.attr.onClick
 import android.content.Context
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -7,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
+import androidx.compose.material3.SuggestionChip
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,10 +19,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import uk.ac.tees.mad.quickdish.DishViewModel
 
 @Composable
 fun HomeScreen(
-    onFindRecipes: (String) -> Unit = {}
+    viewModel: DishViewModel,
 ) {
     var ingredientsInput by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
@@ -122,7 +126,7 @@ fun HomeScreen(
                         vibrateDevice(context)
                     } else {
                         errorMessage = ""
-                        onFindRecipes(ingredientsInput.trim())
+                        viewModel.onFindRecipes(ingredientsInput.trim())
                     }
                 },
                 modifier = Modifier
@@ -156,8 +160,87 @@ private fun vibrateDevice(context: Context) {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "QuickDish – Home Screen")
 @Composable
-fun HomeScreenPreview() {
-    HomeScreen()
-}
+fun QuickDishHomeScreenPreview() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFFAFAFA))
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        // Logo + Title
+        Text(text = "Dish", fontSize = 48.sp)
+
+        Spacer(Modifier.height(8.dp))
+
+        Text(
+            text = "QuickDish",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF2E7D32)
+        )
+
+        Spacer(Modifier.height(8.dp))
+
+        Text(
+            text = "Enter ingredients to discover amazing recipes",
+            fontSize = 14.sp,
+            color = Color(0xFF757575),
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(Modifier.height(40.dp))
+OutlinedTextField(value = "", onValueChange = {},)
+        // Input Field
+        OutlinedTextField(
+            value = "chicken, tomatoes, rice, garlic",
+            onValueChange = {},
+            label = { Text("Enter ingredients...")},
+                placeholder = { Text("e.g., chicken, tomatoes, rice") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFF4CAF50),
+                    unfocusedBorderColor = Color.LightGray,
+                    focusedLabelColor = Color(0xFF4CAF50),
+                    cursorColor = Color(0xFF4CAF50)
+                ),
+                maxLines = 4
+                )
+
+                        SuggestionChip(
+                        onClick = {
+                            
+                        },
+                    label = { Text("Try sample ingredients") },
+                    colors = SuggestionChipDefaults.suggestionChipColors(
+                        containerColor = Color(0xFFE8F5E9),
+                        labelColor = Color(0xFF2E7D32)
+                    )
+                )
+
+                Spacer(Modifier.height(32.dp))
+
+                // Find Recipes Button
+                Button(
+                    onClick = {},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(
+                        "Find Recipes",
+                        color = Color.White,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+    }

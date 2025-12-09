@@ -1,5 +1,8 @@
 package uk.ac.tees.mad.quickdish.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Recipe(
     val id: String,
     val title: String,
