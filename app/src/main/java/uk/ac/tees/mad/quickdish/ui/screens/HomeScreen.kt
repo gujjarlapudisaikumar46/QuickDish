@@ -150,14 +150,7 @@ fun HomeScreen(
 
 private fun vibrateDevice(context: Context) {
     val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
-    vibrator?.let {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            it.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE))
-        } else {
-            @Suppress("DEPRECATION")
-            it.vibrate(200)
-        }
-    }
+    vibrator?.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE))
 }
 
 @Preview(showBackground = true, name = "QuickDish – Home Screen")
@@ -215,7 +208,7 @@ OutlinedTextField(value = "", onValueChange = {},)
 
                         SuggestionChip(
                         onClick = {
-                            
+
                         },
                     label = { Text("Try sample ingredients") },
                     colors = SuggestionChipDefaults.suggestionChipColors(

@@ -31,13 +31,18 @@ class DishViewModel : ViewModel() {
                 _error.value = null
 
                 val json = service.generateRecipes(ingredients)
+                val clean = json.replace("```json", "")
+                    .replace("```", "")
+                    .trim()
 
-                val parsed = Json.decodeFromString<List<Recipe>>(json)
+                val parsed = Json.decodeFromString<List<Recipe>>(clean)
 
                 _recipes.value = parsed
+                Log.d("Recipe", parsed.toString())
 
             } catch (e: Exception) {
                 _error.value = "Failed to get recipes: ${e.message}"
+                Log.d("Recipe", e.message.toString())
             } finally {
                 _loading.value = false
             }
