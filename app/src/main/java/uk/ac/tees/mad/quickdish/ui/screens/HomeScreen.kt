@@ -1,6 +1,5 @@
 package uk.ac.tees.mad.quickdish.ui.screens
 
-import android.R.attr.onClick
 import android.content.Context
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -19,12 +18,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import uk.ac.tees.mad.quickdish.DishViewModel
+import uk.ac.tees.mad.quickdish.navigation.Screen
 
 @Composable
 fun HomeScreen(
     viewModel: DishViewModel,
+    navController: NavController
 ) {
     var ingredientsInput by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
@@ -126,7 +127,9 @@ fun HomeScreen(
                         vibrateDevice(context)
                     } else {
                         errorMessage = ""
-                        viewModel.onFindRecipes(ingredientsInput.trim())
+                        viewModel.onFindRecipes(ingredientsInput.trim(), onSuccess = {
+                            navController.navigate(Screen.RecipeResults.route)
+                        })
                     }
                 },
                 modifier = Modifier

@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import uk.ac.tees.mad.quickdish.DishViewModel
 import uk.ac.tees.mad.quickdish.ui.screens.HomeScreen
+import uk.ac.tees.mad.quickdish.ui.screens.RecipeResultsScreen
 import uk.ac.tees.mad.quickdish.ui.screens.SplashScreen
 
 sealed class Screen(val route: String) {
@@ -42,11 +43,11 @@ fun AppNavigation(modifier: Modifier = Modifier) {
 
         composable(Screen.Home.route) {
             // Implement HomeScreen
-            HomeScreen (viewModel)
+            HomeScreen (viewModel, navController)
         }
 
         composable(Screen.RecipeResults.route) {
-            // Implement RecipeResultsScreen
+            RecipeResultsScreen(viewModel, onBackClick = {navController.popBackStack()})
         }
 
         composable(Screen.RecipeDetails.route) {

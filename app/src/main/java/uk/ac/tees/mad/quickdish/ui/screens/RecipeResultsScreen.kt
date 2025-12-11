@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,18 +21,20 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import uk.ac.tees.mad.quickdish.DishViewModel
 import uk.ac.tees.mad.quickdish.model.Recipe
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeResultsScreen(
-    recipes: List<Recipe> = emptyList(),
+    viewModel: DishViewModel,
     ingredientsUsed: String = "",
     onRecipeClick: (Recipe) -> Unit = {},
     onBackClick: () -> Unit = {},
     onRefreshClick: () -> Unit = {}
 ) {
+    val recipes = viewModel.recipes.collectAsState().value
     Scaffold(
         topBar = {
             TopAppBar(
@@ -232,36 +235,146 @@ fun RecipeCard(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "QuickDish – Recipe Results")
 @Composable
 fun RecipeResultsScreenPreview() {
-    val sampleRecipes = listOf(
-        Recipe(
-            id = "1",
-            title = "Garlic Butter Chicken",
-            description = "A delicious and easy chicken dish with garlic butter sauce, perfect for weeknight dinners.",
-            ingredients = listOf("chicken", "garlic", "butter", "olive oil"),
-            steps = listOf("Step 1", "Step 2", "Step 3")
-        ),
-        Recipe(
-            id = "2",
-            title = "Chicken Tomato Rice",
-            description = "One-pot chicken and rice with fresh tomatoes and herbs. Simple and flavorful.",
-            ingredients = listOf("chicken", "rice", "tomatoes", "onion", "garlic"),
-            steps = listOf("Step 1", "Step 2", "Step 3", "Step 4")
-        ),
-        Recipe(
-            id = "3",
-            title = "Mediterranean Chicken Bowl",
-            description = "Healthy chicken bowl with Mediterranean flavors, olives, and fresh vegetables.",
-            ingredients = listOf("chicken", "olives", "tomatoes", "cucumber", "feta"),
-            steps = listOf("Step 1", "Step 2")
-        )
-    )
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFFAFAFA))
+    ) {
+        // Top Bar
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFF4CAF50))
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Back",
+                tint = Color.White
+            )
+            Spacer(Modifier.width(16.dp))
+            Text(
+                "Recipe Results",
+                color = Color.White,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(Modifier.weight(1f))
+            Icon(
+                imageVector = Icons.Default.Refresh,
+                contentDescription = "Refresh",
+                tint = Color.White
+            )
+        }
 
-    RecipeResultsScreen(
-        recipes = sampleRecipes,
-        ingredientsUsed = "chicken, garlic, olive oil, tomatoes"
-    )
+        // Ingredients Used Header
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White)
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "Based on your ingredients:",
+                fontSize = 12.sp,
+                color = Color(0xFF757575)
+            )
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text = "chicken, garlic, olive oil, tomatoes",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFF2E7D32)
+            )
+        }
+
+        Spacer(Modifier.height(12.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                "3 recipes found",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color(0xFF212121)
+            )
+        }
+
+        Spacer(Modifier.height(12.dp))
+
+        // Recipe Cards
+        LazyColumn(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(3) { index ->
+                val titles = listOf(
+                    "Garlic Butter Chicken",
+                    "Chicken Tomato Rice",
+                    "Mediterranean Chicken Bowl"
+                )
+                val descriptions = listOf(
+                    "A delicious and easy chicken dish with garlic butter sauce, perfect for weeknight dinners.",
+                    "One-pot chicken and rice with fresh tomatoes and herbs. Simple and flavorful.",
+                    "Healthy chicken bowl with Mediterranean flavors, olives, and fresh vegetables."
+                )
+
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { },
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    elevation = CardDefaults.cardElevation(2.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = titles[index],
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF212121),
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+
+                            Spacer(Modifier.height(8.dp))
+
+                            Text(
+                                text = descriptions[index],
+                                fontSize = 14.sp,
+                                color = Color(0xFF757575),
+                                maxLines = 3,
+                                overflow = TextOverflow.Ellipsis
+                            )
+
+                            Spacer(Modifier.height(8.dp))
+
+                            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                                Text("4 ingredients", fontSize = 12.sp, color = Color(0xFF4CAF50))
+                                Text("3 steps", fontSize = 12.sp, color = Color(0xFFFF9800))
+                            }
+                        }
+
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowRight,
+                            contentDescription = "View recipe",
+                            tint = Color(0xFF4CAF50)
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
-

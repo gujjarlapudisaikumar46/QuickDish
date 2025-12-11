@@ -3,8 +3,6 @@ package uk.ac.tees.mad.quickdish
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
-import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -24,7 +22,7 @@ class DishViewModel : ViewModel() {
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
 
-    fun onFindRecipes(ingredients: String) {
+    fun onFindRecipes(ingredients: String, onSuccess: () -> Unit) {
         viewModelScope.launch {
             try {
                 _loading.value = true
@@ -39,7 +37,7 @@ class DishViewModel : ViewModel() {
 
                 _recipes.value = parsed
                 Log.d("Recipe", parsed.toString())
-
+                onSuccess()
             } catch (e: Exception) {
                 _error.value = "Failed to get recipes: ${e.message}"
                 Log.d("Recipe", e.message.toString())
