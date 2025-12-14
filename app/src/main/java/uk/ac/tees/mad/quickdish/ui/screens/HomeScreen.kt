@@ -30,6 +30,7 @@ fun HomeScreen(
     var ingredientsInput by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
     val context = LocalContext.current
+    val loading = viewModel.loading.collectAsState().value
 
     Box(
         modifier = Modifier
@@ -139,13 +140,18 @@ fun HomeScreen(
                     containerColor = Color(0xFF4CAF50),
                     contentColor = Color.White
                 ),
+                enabled = !loading,
                 shape = RoundedCornerShape(12.dp)
             ) {
-                Text(
-                    text = "Find Recipes",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                if (loading){
+                    CircularProgressIndicator()
+                }else {
+                    Text(
+                        text = "Find Recipes",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
     }

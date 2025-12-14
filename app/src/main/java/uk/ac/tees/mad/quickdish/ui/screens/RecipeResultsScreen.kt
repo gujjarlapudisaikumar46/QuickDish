@@ -21,14 +21,21 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import uk.ac.tees.mad.quickdish.DishViewModel
 import uk.ac.tees.mad.quickdish.model.Recipe
+import uk.ac.tees.mad.quickdish.navigation.Screen
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeResultsScreen(
     viewModel: DishViewModel,
+    navController: NavController,
     ingredientsUsed: String = "",
     onRecipeClick: (Recipe) -> Unit = {},
     onBackClick: () -> Unit = {},
@@ -150,8 +157,11 @@ fun RecipeResultsScreen(
                     items(recipes) { recipe ->
                         RecipeCard(
                             recipe = recipe,
-                            onClick = { onRecipeClick(recipe) }
-                        )
+                            onClick = {
+                                val json = Json.encodeToString(recipe)
+                                val encoded = URLEncoder.encode(json, StandardCharsets.UTF_8.toString())
+                                navController.navigate(Screen.RecipeDetails.createRoute(encoded))
+                            }                        )
                         Spacer(modifier = Modifier.height(12.dp))
                     }
                     item {

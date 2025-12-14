@@ -15,7 +15,7 @@ class GeminiService(apiKey: String) {
             You are a recipe generator. Based ONLY on these ingredients:
             $ingredients
 
-            Generate 3 recipes in JSON array format:
+            Generate 3 to 10 recipes in JSON array format:
 
             [
               {
