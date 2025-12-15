@@ -12,6 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,7 +29,8 @@ import uk.ac.tees.mad.quickdish.model.Recipe
 @Composable
 fun RecipeDetailsScreen(
     recipe: Recipe? = null,
-    onBackClick: () -> Unit = {}
+    onBackClick: () -> Unit = {},
+    onRecipeSave: (recipe : Recipe, context : Context) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -49,17 +51,30 @@ fun RecipeDetailsScreen(
                         )
                     }
                 },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            recipe?.let {
-                                copyRecipeToClipboard(context, it)
-                            }
-                        }) {
-                        Icon(
-                            imageVector = Icons.Default.ContentCopy,
-                            contentDescription = "Copy Recipe"
-                        )
+                actions = @androidx.compose.runtime.Composable {
+                    Row() {
+                        IconButton(
+                            onClick = {
+                                recipe?.let {
+                                    onRecipeSave(recipe, context)
+                                }
+                            }) {
+                            Icon(
+                                imageVector = Icons.Default.Save,
+                                contentDescription = "Copy Recipe"
+                            )
+                        }
+                        IconButton(
+                            onClick = {
+                                recipe?.let {
+                                    copyRecipeToClipboard(context, it)
+                                }
+                            }) {
+                            Icon(
+                                imageVector = Icons.Default.ContentCopy,
+                                contentDescription = "Copy Recipe"
+                            )
+                        }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -337,5 +352,5 @@ fun RecipeDetailsScreenPreview() {
         )
     )
 
-    RecipeDetailsScreen(recipe = sampleRecipe)
+    RecipeDetailsScreen(recipe = sampleRecipe, onRecipeSave = {recipe, context -> }, onBackClick = {})
 }

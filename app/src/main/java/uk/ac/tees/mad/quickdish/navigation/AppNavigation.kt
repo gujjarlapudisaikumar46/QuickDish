@@ -72,7 +72,11 @@ fun AppNavigation(modifier: Modifier = Modifier) {
 
             val recipe = Json.decodeFromString<Recipe>(json)
 
-            RecipeDetailsScreen(recipe)
+            RecipeDetailsScreen(recipe, onBackClick = {
+                navController.popBackStack()
+            }, onRecipeSave = {recipe, context ->
+                viewModel.saveRecipe(recipe, context)
+            })
         }
 
         composable(Screen.Settings.route) {

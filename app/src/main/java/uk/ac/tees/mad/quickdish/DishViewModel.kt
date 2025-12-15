@@ -1,6 +1,8 @@
 package uk.ac.tees.mad.quickdish
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -8,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import uk.ac.tees.mad.quickdish.data.GeminiService
+import uk.ac.tees.mad.quickdish.data.SavedRecipesRepository
 import uk.ac.tees.mad.quickdish.model.Recipe
 
 class DishViewModel : ViewModel() {
@@ -44,6 +47,19 @@ class DishViewModel : ViewModel() {
             } finally {
                 _loading.value = false
             }
+        }
+    }
+
+    fun saveRecipe(recipe: Recipe, context: Context) {
+        viewModelScope.launch {
+            val datastore = SavedRecipesRepository(context)
+            val success = datastore.saveRecipe(recipe)
+
+            Toast.makeText(
+                context,
+                if (success) "Recipe saved!" else "Failed to save recipe",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 }
