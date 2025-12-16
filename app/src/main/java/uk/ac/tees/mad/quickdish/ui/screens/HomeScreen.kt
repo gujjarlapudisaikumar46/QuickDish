@@ -6,6 +6,8 @@ import android.os.Vibrator
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.*
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.runtime.*
@@ -22,6 +24,7 @@ import androidx.navigation.NavController
 import uk.ac.tees.mad.quickdish.DishViewModel
 import uk.ac.tees.mad.quickdish.navigation.Screen
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     viewModel: DishViewModel,
@@ -32,125 +35,138 @@ fun HomeScreen(
     val context = LocalContext.current
     val loading = viewModel.loading.collectAsState().value
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFFAFAFA))
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                actions = {
+                    IconButton( onClick = {
+                        navController.navigate(Screen.Settings.route)
+                    },) { Icon(Icons.Rounded.Settings, contentDescription = null, tint = Color(0xFF2E7D32)) }
+                },
+                title = {  }
+            )
+        }
     ) {
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .background(Color(0xFFFAFAFA))
         ) {
-            // App Logo/Title
-            Text(
-                text = "🍽️",
-                fontSize = 48.sp
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "QuickDish",
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF2E7D32)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "Enter ingredients to discover amazing recipes",
-                fontSize = 14.sp,
-                color = Color(0xFF757575),
-                textAlign = TextAlign.Center
-            )
-
-            Spacer(modifier = Modifier.height(40.dp))
-
-            // Ingredients Input Field
-            OutlinedTextField(
-                value = ingredientsInput,
-                onValueChange = {
-                    ingredientsInput = it
-                    errorMessage = ""
-                },
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp),
-                label = { Text("Enter ingredients...") },
-                placeholder = { Text("e.g., chicken, tomatoes, rice") },
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF4CAF50),
-                    focusedLabelColor = Color(0xFF4CAF50),
-                    cursorColor = Color(0xFF4CAF50)
-                ),
-                shape = RoundedCornerShape(12.dp),
-                maxLines = 4,
-                isError = errorMessage.isNotEmpty()
-            )
-
-            // Error Message
-            if (errorMessage.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = errorMessage,
-                    color = Color(0xFFD32F2F),
-                    fontSize = 14.sp,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Sample Ingredients Chip
-            SuggestionChip(
-                onClick = {
-                    ingredientsInput = "chicken, garlic, olive oil, tomatoes"
-                    errorMessage = ""
-                },
-                label = { Text("Try sample ingredients") },
-                colors = SuggestionChipDefaults.suggestionChipColors(
-                    containerColor = Color(0xFFE8F5E9),
-                    labelColor = Color(0xFF2E7D32)
-                )
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Find Recipes Button
-            Button(
-                onClick = {
-                    if (ingredientsInput.trim().isEmpty()) {
-                        errorMessage = "Please enter at least one ingredient"
-                        vibrateDevice(context)
-                    } else {
-                        errorMessage = ""
-                        viewModel.onFindRecipes(ingredientsInput.trim(), onSuccess = {
-                            navController.navigate(Screen.RecipeResults.route)
-                        })
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF4CAF50),
-                    contentColor = Color.White
-                ),
-                enabled = !loading,
-                shape = RoundedCornerShape(12.dp)
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                if (loading){
-                    CircularProgressIndicator()
-                }else {
+                // App Logo/Title
+                Text(
+                    text = "🍽️",
+                    fontSize = 48.sp
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "QuickDish",
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF2E7D32)
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Enter ingredients to discover amazing recipes",
+                    fontSize = 14.sp,
+                    color = Color(0xFF757575),
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(40.dp))
+
+                // Ingredients Input Field
+                OutlinedTextField(
+                    value = ingredientsInput,
+                    onValueChange = {
+                        ingredientsInput = it
+                        errorMessage = ""
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp),
+                    label = { Text("Enter ingredients...") },
+                    placeholder = { Text("e.g., chicken, tomatoes, rice") },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF4CAF50),
+                        focusedLabelColor = Color(0xFF4CAF50),
+                        cursorColor = Color(0xFF4CAF50)
+                    ),
+                    shape = RoundedCornerShape(12.dp),
+                    maxLines = 4,
+                    isError = errorMessage.isNotEmpty()
+                )
+
+                // Error Message
+                if (errorMessage.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Find Recipes",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        text = errorMessage,
+                        color = Color(0xFFD32F2F),
+                        fontSize = 14.sp,
+                        modifier = Modifier.fillMaxWidth()
                     )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Sample Ingredients Chip
+                SuggestionChip(
+                    onClick = {
+                        ingredientsInput = "chicken, garlic, olive oil, tomatoes"
+                        errorMessage = ""
+                    },
+                    label = { Text("Try sample ingredients") },
+                    colors = SuggestionChipDefaults.suggestionChipColors(
+                        containerColor = Color(0xFFE8F5E9),
+                        labelColor = Color(0xFF2E7D32)
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Find Recipes Button
+                Button(
+                    onClick = {
+                        if (ingredientsInput.trim().isEmpty()) {
+                            errorMessage = "Please enter at least one ingredient"
+                            vibrateDevice(context)
+                        } else {
+                            errorMessage = ""
+                            viewModel.onFindRecipes(ingredientsInput.trim(), onSuccess = {
+                                navController.navigate(Screen.RecipeResults.route)
+                            })
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF4CAF50),
+                        contentColor = Color.White
+                    ),
+                    enabled = !loading,
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    if (loading) {
+                        CircularProgressIndicator()
+                    } else {
+                        Text(
+                            text = "Find Recipes",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
         }

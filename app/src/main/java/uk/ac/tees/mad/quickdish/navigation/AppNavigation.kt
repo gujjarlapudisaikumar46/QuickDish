@@ -15,6 +15,7 @@ import uk.ac.tees.mad.quickdish.ui.screens.SplashScreen
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import uk.ac.tees.mad.quickdish.ui.screens.RecipeDetailsScreen
+import uk.ac.tees.mad.quickdish.ui.screens.SettingsScreen
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -80,7 +81,7 @@ fun AppNavigation(modifier: Modifier = Modifier) {
         }
 
         composable(Screen.Settings.route) {
-            // Implement SettingsScreen
+            SettingsScreen()
         }
     }
 }
