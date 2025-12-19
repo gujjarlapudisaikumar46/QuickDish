@@ -2,6 +2,7 @@ package uk.ac.tees.mad.quickdish.ui.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,13 +23,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import uk.ac.tees.mad.quickdish.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     offlineCacheEnabled: Boolean = false,
-    onBackClick: () -> Unit = {},
-    onOfflineCacheToggle: (Boolean) -> Unit = {},
+    onBackClick: () -> Unit,
+    onOfflinePage: () -> Unit,
     onClearCache: () -> Unit = {}
 ) {
     var cacheEnabled by remember { mutableStateOf(offlineCacheEnabled) }
@@ -122,7 +124,7 @@ fun SettingsScreen(
 
             // Cache Settings Section
             Text(
-                text = "CACHE SETTINGS",
+                text = "CACHE OPTIONS",
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF757575),
@@ -131,18 +133,20 @@ fun SettingsScreen(
 
             SettingItem(
                 icon = Icons.Default.Storage,
-                title = "Enable Offline Cache",
-                description = "Store last 3 recipe results for offline access",
-                showSwitch = true,
+                title = "See Offline Cached Recipes",
+                description = "Check stored recipes without relying on internet",
+                showSwitch = false,
                 switchValue = cacheEnabled,
                 onSwitchChange = { enabled ->
                     cacheEnabled = enabled
-                    onOfflineCacheToggle(enabled)
                     Toast.makeText(
                         context,
                         if (enabled) "Cache enabled" else "Cache disabled",
                         Toast.LENGTH_SHORT
                     ).show()
+                },
+                onClick = {
+                    onOfflinePage()
                 }
             )
 
@@ -286,12 +290,16 @@ fun SettingItem(
     description: String,
     showSwitch: Boolean = false,
     switchValue: Boolean = false,
-    onSwitchChange: (Boolean) -> Unit = {}
+    onSwitchChange: (Boolean) -> Unit = {},
+    onClick : () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .clickable{
+                onClick()
+            },
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
@@ -347,6 +355,9 @@ fun SettingItem(
 @Composable
 fun SettingsScreenPreview() {
     SettingsScreen(
-        offlineCacheEnabled = true
+        onBackClick = {
+        },
+        onOfflinePage = {
+        }
     )
 }

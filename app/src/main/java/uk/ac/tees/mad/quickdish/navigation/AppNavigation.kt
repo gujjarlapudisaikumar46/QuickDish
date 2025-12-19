@@ -15,6 +15,7 @@ import uk.ac.tees.mad.quickdish.ui.screens.SplashScreen
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import uk.ac.tees.mad.quickdish.ui.screens.RecipeDetailsScreen
+import uk.ac.tees.mad.quickdish.ui.screens.SavedRecipesScreen
 import uk.ac.tees.mad.quickdish.ui.screens.SettingsScreen
 import java.net.URLDecoder
 import java.net.URLEncoder
@@ -34,6 +35,7 @@ sealed class Screen(val route: String) {
         fun createRoute(recipe: String) = "recipe_details/$recipe"
     }
     data object Settings : Screen("settings")
+    data object Saved : Screen("saved")
 }
 
 
@@ -81,7 +83,19 @@ fun AppNavigation(modifier: Modifier = Modifier) {
         }
 
         composable(Screen.Settings.route) {
-            SettingsScreen()
+            SettingsScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                onOfflinePage = {
+                    navController.navigate(Screen.Saved.route)
+                }
+            )
+        }
+        composable(Screen.Saved.route){
+            SavedRecipesScreen(onBackClick = {
+                navController.popBackStack()
+            }) { }
         }
     }
 }
