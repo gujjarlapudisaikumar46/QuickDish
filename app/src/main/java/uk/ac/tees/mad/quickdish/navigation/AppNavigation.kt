@@ -89,13 +89,19 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                 },
                 onOfflinePage = {
                     navController.navigate(Screen.Saved.route)
+                }, onClearCache = { context ->
+                    viewModel.clearCache(context)
                 }
             )
         }
         composable(Screen.Saved.route){
             SavedRecipesScreen(onBackClick = {
                 navController.popBackStack()
-            }) { }
+            }) { recipe ->
+                val json = Json.encodeToString(recipe)
+                val encoded = URLEncoder.encode(json, StandardCharsets.UTF_8.toString())
+                navController.navigate(Screen.RecipeDetails.createRoute(encoded))
+            }
         }
     }
 }

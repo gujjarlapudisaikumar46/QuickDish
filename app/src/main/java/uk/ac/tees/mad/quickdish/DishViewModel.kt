@@ -15,7 +15,7 @@ import uk.ac.tees.mad.quickdish.model.Recipe
 
 class DishViewModel : ViewModel() {
 
-    val service = GeminiService(apiKey = "AIzaSyDHEnJVvg97j44iksiaKbypiiaKXq28UhM")
+    val service = GeminiService(apiKey = "AIzaSyD15AqUkAVXbE_Lj6ZhSbDXNw4r6Ii7GCw")
     private val _recipes = MutableStateFlow<List<Recipe>>(emptyList())
     val recipes: StateFlow<List<Recipe>> = _recipes
 
@@ -62,5 +62,19 @@ class DishViewModel : ViewModel() {
             ).show()
         }
     }
+
+    fun clearCache(context: Context) {
+        viewModelScope.launch {
+            val repo = SavedRecipesRepository(context)
+            val ok = repo.clearAllRecipes()
+
+            Toast.makeText(
+                context,
+                if (ok) "Cache cleared" else "Failed to clear cache",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
 }
 

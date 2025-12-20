@@ -1,5 +1,6 @@
 package uk.ac.tees.mad.quickdish.ui.screens
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,7 +32,7 @@ fun SettingsScreen(
     offlineCacheEnabled: Boolean = false,
     onBackClick: () -> Unit,
     onOfflinePage: () -> Unit,
-    onClearCache: () -> Unit = {}
+    onClearCache: (context: Context) -> Unit = {}
 ) {
     var cacheEnabled by remember { mutableStateOf(offlineCacheEnabled) }
     val context = LocalContext.current
@@ -198,7 +199,7 @@ fun SettingsScreen(
 
                     Button(
                         onClick = {
-                            onClearCache()
+                            onClearCache(context)
                             Toast.makeText(
                                 context,
                                 "Cache cleared successfully",

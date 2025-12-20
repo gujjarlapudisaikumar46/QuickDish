@@ -65,4 +65,16 @@ class SavedRecipesRepository(private val context: Context) {
             false
         }
     }
+
+    suspend fun clearAllRecipes(): Boolean {
+        return try {
+            context.savedRecipesDataStore.edit { prefs ->
+                prefs.remove(SAVED_RECIPES_KEY)
+            }
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
 }
